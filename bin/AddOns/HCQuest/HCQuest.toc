@@ -1,8 +1,0 @@
-## Interface: 11200
-## Title: HCQuest
-## Author: Grylls
-## Notes: Adds HC warning messages for PvP and difficult quests to the quest frame.
-## Version: 1
-
-HCQuest.lua
-Quests.lua

@@ -9,6 +9,7 @@
 if not TargetHPText or not TargetHPPercText then return end
 
 local T = ShaguTweaks.T
+local L = ShaguTweaks.L
 local selldata
 
 local module = ShaguTweaks:register({
@@ -63,6 +64,11 @@ module.enable = function(self)
   if ShaguTweaks.dismount then
     table.insert(ShaguTweaks.dismount.shapeshifts, "ability_druid_treeoflife")
   end
+
+  -- update debuff durations
+  L["debuffs"]["Hand of Reckoning"] = {[0]=3.0}
+  L["debuffs"]['Insect Swarm'] = {[0]=18.0}
+  L["debuffs"]['Moonfire'] = {[1]=9.0,[2]=18.0,[3]=18.0,[4]=18.0,[5]=18.0,[6]=18.0,[7]=18.0,[8]=18.0,[9]=18.0,[10]=18.0,[0]=18.0}
 end
 
 -- Turtle WoW specific libdebuff patches
@@ -86,6 +92,16 @@ libdebuff_twow:SetScript("OnEvent", function()
           libdebuff:AddEffect(name, 0, seal)
         end
       end
+    end
+  end
+
+  -- refresh Immolate duration after cast Conflagrate
+  if string.find(arg1, "Conflagrate") then
+    local name = UnitName("target")
+    local level = UnitLevel("target")
+    if libdebuff.objects[name] and libdebuff.objects[name][level] and libdebuff.objects[name][level]["Immolate"] then
+      local duration = libdebuff.objects[name][level]["Immolate"].duration
+      libdebuff:UpdateDuration(name, level, "Immolate", duration - 3)
     end
   end
 end)
